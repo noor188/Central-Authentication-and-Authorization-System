@@ -10,11 +10,11 @@ class User:
     def __init__(self, username, password):
         '''Create a new user object. The password will be encrypted before storing.'''
         self.username = username
-        self.password = self._encryptPw(password)
+        self.password = _encryptPw(password)
         self.isLoggedIn = False
            
     def checkPassword(self, password):
         '''Return True if the password is valid for this user, False otherwise.'''
-        encrypted = self._encryptPw(password)
+        encrypted = _encryptPw(password)
         return encrypted == self.password
 
