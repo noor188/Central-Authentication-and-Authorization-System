@@ -7,6 +7,9 @@ def _encryptPw(self, password):
         return hashlib.sha256(hashString).hexdigest()
 
 class User:
+    '''Store the username and an encrypted password. Will allow a user to 
+    login by checking whether an entered password is valid.'''
+    
     def __init__(self, username, password):
         '''Create a new user object. The password will be encrypted before storing.'''
         self.username = username
