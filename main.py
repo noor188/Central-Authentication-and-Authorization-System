@@ -1,9 +1,9 @@
 import hashlib
 
 # methods
-def _encryptPw(self, password):
+def _encryptPw(username, password):
         '''Encrypt the password with the username and return the sha digest.'''
-        hashString = (self.username + password)
+        hashString = (username + password)
         hashString = hashString.encode('UTF-8')
         return hashlib.sha256(hashString).hexdigest()
 
@@ -32,11 +32,11 @@ class User:
     def __init__(self, username, password):
         '''Create a new user object. The password will be encrypted before storing.'''
         self.username   = username
-        self.password   = _encryptPw(password)
+        self.password   = _encryptPw(username, password)
         self.isLoggedIn = False
            
     def checkPassword(self, password):
         '''Return True if the password is valid for this user, False otherwise.'''
-        encrypted = _encryptPw(password)
+        encrypted = _encryptPw(self.username, password)
         return encrypted == self.password
 
