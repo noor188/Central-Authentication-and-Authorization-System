@@ -24,6 +24,13 @@ class PasswordTooShort(AuthException):
     '''Raise an exception if the password is too short.'''
     pass
 
+class InvalidUsername(AuthException):
+    '''Raise an exception if username does not exist in the users dict.'''
+    pass
+
+class InvalidPassword(AuthException):
+    '''Raise an exception if the password does not match.'''
+
 # end exceptions 
 class User:
     '''Store the username and an encrypted password. Will allow a user to 
@@ -39,4 +46,51 @@ class User:
         '''Return True if the password is valid for this user, False otherwise.'''
         encrypted = _encryptPw(self.username, password)
         return encrypted == self.password
+    
+
+class Authenticator:
+    '''Handles user managment and logging in/out'''
+
+    def __init__(self):
+        '''Construct an authentucator, simply a mapping of usrnames
+        to user objects.'''
+        self.users = {}
+    
+    def add_user(self, username, password):
+        '''Creats a user object and add it to the user dictinary.
+        It checks two conditions, username already exist and too short password'''
+        if username in self.users:
+            raise UsernameAlreadyExists(username)
+        if len(password)< 6:
+            raise PasswordTooShort(username)
+        self.users[username] = User(username, password)
+    
+    def login(self, username, password):
+        '''Logs in a user. It handles two conditions, username does not exist and
+        pasword does not match.'''
+        try:
+            user = self.users[username]
+        except KeyError:
+            raise InvalidUsername(username)
+
+        if not user.checkPassword(password):
+            raise InvalidPassword(username, user)
+
+        user.isLoggedIn = True
+        return True
+    
+    def is_logged_in(self, username):
+        '''Checks if a particular user is logged in'''
+        if username in self.users:
+            return self.users[username].is_logged_in
+        return False
+    
+#instance
+authenticator =Authenticator()
+    
+    
+
+    
+    
+
 
